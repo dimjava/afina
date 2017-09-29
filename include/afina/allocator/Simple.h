@@ -55,7 +55,16 @@ public:
 
 private:
     void *_base;
+    char *_data_end;
     const size_t _base_len;
+    size_t *_sys_start;
+    size_t *_sys_end;
+    void *_top;
+
+    void merge_empty_blocks();
+    void insert_into_queue(void *it, size_t N);
+    void print_sys();
+    void print_queue();
 };
 
 } // namespace Allocator

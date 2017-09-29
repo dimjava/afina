@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #ifndef AFINA_ALLOCATOR_POINTER_H
 #define AFINA_ALLOCATOR_POINTER_H
 
@@ -8,16 +10,29 @@ namespace Allocator {
 class Simple;
 
 class Pointer {
+private:
+	void *ptr;
+	void *base;
 public:
     Pointer();
 
-    Pointer(const Pointer &);
-    Pointer(Pointer &&);
+    Pointer(void *b) : base(b) {}
 
-    Pointer &operator=(const Pointer &);
-    Pointer &operator=(Pointer &&);
+	//Pointer(const Pointer &);
+	//Pointer(Pointer &&);
 
-    void *get() const { return 0; }
+    //Pointer &operator=(const Pointer &);
+    //Pointer &operator=(Pointer &&);
+
+    void *get() const { 
+
+    	if (ptr == nullptr) {
+    		return nullptr;
+    	}
+
+    	return ((char *) base) + *((size_t *) ptr);
+	}
+    void set(void *p) { this->ptr = p; }
 };
 
 } // namespace Allocator
