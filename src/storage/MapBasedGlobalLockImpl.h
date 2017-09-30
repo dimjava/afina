@@ -2,8 +2,6 @@
 #define AFINA_STORAGE_MAP_BASED_GLOBAL_LOCK_IMPL_H
 
 #include <map>
-#include <set>
-#include <utility>
 #include <mutex>
 #include <string>
 
@@ -42,8 +40,7 @@ private:
 
     size_t _max_size;
 
-    std::map<std::string, std::pair<std::string, int> > _backend;
-    std::set<std::pair<int, std::string> > _last_saved;
+    std::map<std::string, std::string> _backend;
 };
 
 } // namespace Backend
