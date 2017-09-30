@@ -133,7 +133,7 @@ Pointer Simple::alloc(size_t N) {
 	bool flag = 0;
 	for (int i = 0; i < sys_len; i += 2) {
 		if (this->_sys_start[-i] == -1) {
-			flag = 1;
+			flag = 1;	
 			p.set(this->_sys_start - i);
 			this->_sys_start[-i] = ((char *) queue) - ((char *) this->_base);
 			this->_sys_start[-i - 1] = N;
@@ -314,7 +314,7 @@ void Simple::realloc(Pointer &p, size_t N) {
 		if (queue < it) {
 			prev = queue;
 			queue = *((void **) queue);
-	 		sizes = (size_t *)(queue + 1);
+	 		sizes = (size_t *)((void **) queue + 1);
 			
 			continue;
 		}
@@ -334,7 +334,7 @@ void Simple::realloc(Pointer &p, size_t N) {
 
 	 	if (diff - available_size < 2 * sizeof(size_t)) {
 	 		if (prev == nullptr) {
-	 			this->_top =  it + N;
+	 			this->_top =  (char *) it + N;
 	 		} else {
 	 			//*((void **) prev) = *((void **) pr);
 	 			*((void **) prev) = *((void **) queue);
