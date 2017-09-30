@@ -2,6 +2,8 @@
 #define AFINA_STORAGE_MAP_BASED_GLOBAL_LOCK_IMPL_H
 
 #include <map>
+#include <set>
+#include <utility>
 #include <mutex>
 #include <string>
 
