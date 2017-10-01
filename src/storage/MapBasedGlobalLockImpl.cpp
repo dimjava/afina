@@ -46,13 +46,42 @@ bool MapBasedGlobalLockImpl::Put(const std::string &key, const std::string &valu
 }
 
 // See MapBasedGlobalLockImpl.h
-bool MapBasedGlobalLockImpl::PutIfAbsent(const std::string &key, const std::string &value) { return false; }
+bool MapBasedGlobalLockImpl::PutIfAbsent(const std::string &key, const std::string &value) {
+	if (this->_backend.find(key) == this->_backend.end()) {
+		Put(key, value);
+
+		return true;
+	}
+
+	return false;
+}
 
 // See MapBasedGlobalLockImpl.h
-bool MapBasedGlobalLockImpl::Set(const std::string &key, const std::string &value) { return false; }
+bool MapBasedGlobalLockImpl::Set(const std::string &key, const std::string &value) {
+	if (this->_backend.find(key) != this->_backend.end()) {
+		Put(key, value);
+
+		return true;
+	}
+
+	return false;
+}
 
 // See MapBasedGlobalLockImpl.h
-bool MapBasedGlobalLockImpl::Delete(const std::string &key) { return false; }
+bool MapBasedGlobalLockImpl::Delete(const std::string &key) {
+	map< string, pair<size_t, string> >::iterator it = this->_backend.find(key);
+
+	if (it != this->_backend.end()) {
+		pair<size_t, string> p;
+		p.first = (*it).second.first;
+		p.second = (*it).first;
+
+		this->_priorities.erase(p);
+		this->_backend.erase(it);
+	}
+
+	return true;
+}
 
 // See MapBasedGlobalLockImpl.h
 bool MapBasedGlobalLockImpl::Get(const std::string &key, std::string &value) const {

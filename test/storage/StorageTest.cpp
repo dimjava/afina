@@ -49,3 +49,16 @@ TEST(StorageTest, PutIfAbsent) {
     EXPECT_TRUE(storage.Get("KEY1", value));
     EXPECT_TRUE(value == "val1");
 }
+
+//////////////////////////////////////////////////////////
+TEST(StorageTest, SizeOverflow) {
+    MapBasedGlobalLockImpl storage;
+
+    std::string key = "s"; 
+    for (int i = 0; i < 1025; i++) {
+        storage.Put(key, key);
+        key = key + "a";
+    }
+
+    EXPECT_FALSE(storage.Get("s", key));
+}
