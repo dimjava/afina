@@ -280,6 +280,7 @@ void Simple::realloc(Pointer &p, size_t N) {
 
 	//cout << "len = " << len << endl;
 	if (len == 0) {
+		//cout << "\n\n\nERROR\n\n\n";
 		return;
 	}
 
@@ -437,7 +438,7 @@ void Simple::defrag() {
 	size_t prev_min = -1;
 
 	//cout << "END before defrag = " << (void *) defraged_end << endl;
-	print_sys();
+	//print_sys();
 
 	for (;;) {
 		size_t mmin = -1;

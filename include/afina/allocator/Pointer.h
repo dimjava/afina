@@ -11,8 +11,8 @@ class Simple;
 
 class Pointer {
 private:
-	void *ptr;
-	void *base;
+	void *ptr = nullptr;
+	void *base = nullptr;
 public:
     Pointer();
 
