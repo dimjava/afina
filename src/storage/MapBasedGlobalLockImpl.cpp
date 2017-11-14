@@ -1,5 +1,7 @@
 #include "MapBasedGlobalLockImpl.h"
 
+#include <iostream>
+
 using namespace std;
 
 namespace Afina {
@@ -7,8 +9,11 @@ namespace Backend {
 
 // See MapBasedGlobalLockImpl.h
 bool MapBasedGlobalLockImpl::Put(const std::string &key, const std::string &value) {
+	size_t max_priority = 0;
 
-	size_t max_priority = (*this->_priorities.begin()).first;
+	if (this->_priorities.size() != 0) {
+		max_priority = (*this->_priorities.rbegin()).first;
+	}
 
 	if (this->_backend.size() >= this->_max_size) {
 		this->_backend.erase((*this->_priorities.begin()).second);
@@ -18,9 +23,7 @@ bool MapBasedGlobalLockImpl::Put(const std::string &key, const std::string &valu
 	map< string, pair<size_t, string> >::iterator it = this->_backend.find(key);
 
 	if (it == this->_backend.end()) {
-		pair<size_t, string> p;
-		p.first = max_priority + 1;
-		p.second = key;
+		pair<size_t, string> p = make_pair(max_priority + 1, key);
 
 		this->_priorities.insert(p);
 
@@ -85,7 +88,6 @@ bool MapBasedGlobalLockImpl::Delete(const std::string &key) {
 
 // See MapBasedGlobalLockImpl.h
 bool MapBasedGlobalLockImpl::Get(const std::string &key, std::string &value) const {
-	
 	map< string, pair<size_t, string> >::const_iterator it = this->_backend.find(key);
 
 	if (it == this->_backend.end()) {
