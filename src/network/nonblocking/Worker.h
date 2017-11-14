@@ -4,6 +4,12 @@
 #include <memory>
 #include <pthread.h>
 
+#include <atomic>
+#include <exception>
+
+#include "Utils.h"
+#include "unistd.h"
+
 namespace Afina {
 
 // Forward declaration, see afina/Storage.h
@@ -20,6 +26,11 @@ namespace NonBlocking {
 class Worker {
 public:
     Worker(std::shared_ptr<Afina::Storage> ps);
+    
+    Worker(const Worker& w) {
+        this->ps = w.ps;
+    }
+
     ~Worker();
 
     /**
@@ -47,10 +58,14 @@ protected:
     /**
      * Method executing by background thread
      */
-    void OnRun(void *args);
+    void OnRun(int server_socket);
+    static void* StartNewThread(void* args);
+    static void Clean(void* args);
 
 private:
     pthread_t thread;
+    std::shared_ptr<Afina::Storage> ps;
+    std::atomic<bool> running;
 };
 
 } // namespace NonBlocking
